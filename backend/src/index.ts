@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 // Корневой маршрут
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.json({
     message: 'API is running',
     endpoints: {
