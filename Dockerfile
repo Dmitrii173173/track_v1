@@ -10,7 +10,6 @@ FROM base AS backend-build
 WORKDIR /app/backend
 COPY backend/package*.json ./
 RUN npm install
-COPY backend/.env ./
 COPY backend ./
 RUN npm run prisma:generate
 RUN npm run build --verbose
@@ -24,7 +23,6 @@ COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
 COPY --from=backend-build /app/backend/dist ./backend/dist
 COPY --from=backend-build /app/backend/package.json ./backend/
 COPY --from=backend-build /app/backend/prisma ./backend/prisma
-COPY --from=backend-build /app/backend/.env ./backend/
 
 # Set environment variables
 ENV NODE_ENV=production
