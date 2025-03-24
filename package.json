@@ -1,0 +1,28 @@
+{
+  "name": "track-project",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "collector"
+  ],
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:collector": "cd collector && npm install",
+    "install:all": "npm run install:backend && npm run install:frontend && npm run install:collector",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run dev",
+    "start:collector": "cd collector && npm start",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build:collector": "cd collector && npm run build",
+    "build": "npm run build:backend && npm run build:frontend && npm run build:collector",
+    "dev": "npm run start:backend & npm run start:frontend & npm run start:collector",
+    "start": "cd backend && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
