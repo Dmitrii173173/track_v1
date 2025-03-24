@@ -1,30 +1,7 @@
 {
-  "$schema": "https://railway.com/railway.schema.json",
+  "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS",
-    "nixpacksPlan": {
-      "providers": ["node"],
-      "phases": {
-        "setup": {
-          "aptPkgs": ["nodejs", "npm"]
-        }
-      }
-    },
-    "buildCommand": "cd backend && npm install && npm run prisma:generate && npm run build"
-  },
-  "deploy": {
-    "runtime": "V2",
-    "numReplicas": 1,
-    "startCommand": "cd backend && npm start",
-    "healthcheckPath": "/api/latest",
-    "sleepApplication": false,
-    "multiRegionConfig": {
-      "us-west2": {
-        "numReplicas": 1
-      }
-    },
-    "restartPolicyType": "ON_FAILURE",
-    "healthcheckTimeout": 100,
-    "restartPolicyMaxRetries": 3
+    "builder": "DOCKERFILE",
+    "dockerfile": "Dockerfile"
   }
 } 
