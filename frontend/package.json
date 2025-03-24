@@ -10,10 +10,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
+    "chart.js": "^4.4.1",
+    "date-fns": "^2.30.0",
     "nuxt": "^3.10.3",
+    "pinia": "^2.1.7",
     "vue": "^3.4.19",
-    "vue-router": "^4.3.0",
-    "pinia": "^2.1.7"
+    "vue-chartjs": "^5.2.0",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",

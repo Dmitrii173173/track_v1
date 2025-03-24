@@ -1,24 +1,30 @@
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-        Bitcoin Price Tracker
-      </h1>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">BTC Price Tracker</h1>
 
-      <div class="grid grid-cols-1 gap-6">
-        <BitcoinChart />
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
-            Latest Price
-          </h2>
-          <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            {{ latestPrice }} USDT
-          </div>
-          <div class="text-sm text-gray-600 dark:text-gray-400">
-            Last updated: {{ lastUpdated }}
-          </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Latest Price -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Latest Price</h2>
+        <div v-if="latestPrice" class="text-2xl font-bold">
+          ${{ latestPrice.price.toLocaleString() }}
         </div>
+        <div v-else class="text-gray-500">Loading...</div>
+      </div>
+
+      <!-- Price Chart -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Price History</h2>
+        <div class="mb-4">
+          <select v-model="selectedPeriod" class="border rounded px-3 py-2">
+            <option value="day">Last 24 Hours</option>
+            <option value="week">Last Week</option>
+            <option value="month">Last Month</option>
+            <option value="year">Last Year</option>
+          </select>
+        </div>
+        <PriceChart v-if="prices.length" :prices="prices" />
+        <div v-else class="text-gray-500">Loading...</div>
       </div>
     </div>
   </div>
@@ -26,24 +32,39 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { format } from "date-fns";
+import PriceChart from "~/components/PriceChart.vue";
 
-const latestPrice = ref("0");
-const lastUpdated = ref("");
+const config = useRuntimeConfig();
+const latestPrice = ref<{ price: number } | null>(null);
+const prices = ref<Array<{ price: number; timestamp: string }>>([]);
+const selectedPeriod = ref("day");
 
 const fetchLatestPrice = async () => {
   try {
-    const response = await fetch("/api/latest");
-    const data = await response.json();
-    latestPrice.value = data.price;
-    lastUpdated.value = format(new Date(data.timestamp), "HH:mm:ss");
+    const response = await fetch(`${config.public.apiBase}/api/latest`);
+    latestPrice.value = await response.json();
   } catch (error) {
-    console.error("Error fetching latest price:", error);
+    console.error("Failed to fetch latest price:", error);
   }
 };
 
+const fetchPrices = async () => {
+  try {
+    const response = await fetch(
+      `${config.public.apiBase}/api/prices?period=${selectedPeriod.value}`
+    );
+    prices.value = await response.json();
+  } catch (error) {
+    console.error("Failed to fetch prices:", error);
+  }
+};
+
+watch(selectedPeriod, () => {
+  fetchPrices();
+});
+
 onMounted(() => {
   fetchLatestPrice();
-  setInterval(fetchLatestPrice, 5000); // Обновляем каждые 5 секунд
+  fetchPrices();
 });
 </script>
