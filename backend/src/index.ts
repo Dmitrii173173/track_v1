@@ -4,22 +4,25 @@ import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
 import { RequestHandler } from 'express'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 dotenv.config()
 
 const app = express()
 const prisma = new PrismaClient()
 const port = process.env.PORT || 4000
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 app.use(cors())
 app.use(express.json())
 
 // Обслуживание статических файлов фронтенда
-app.use(express.static(path.join(__dirname, '../../frontend/dist')))
+app.use(express.static(path.join(__dirname, '../../frontend/.output/public')))
 
 // Корневой маршрут
 app.get('/', (_req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'))
+  res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
 })
 
 // Получение последней цены

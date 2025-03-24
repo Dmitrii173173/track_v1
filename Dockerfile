@@ -20,6 +20,7 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend ./
+RUN npm run postinstall
 RUN npm run build
 
 # Final image
@@ -33,7 +34,7 @@ COPY --from=backend-build /app/backend/package.json ./backend/
 COPY --from=backend-build /app/backend/prisma ./backend/prisma
 
 # Copy frontend build
-COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+COPY --from=frontend-build /app/frontend/.output ./frontend/.output
 
 # Set environment variables
 ENV NODE_ENV=production
