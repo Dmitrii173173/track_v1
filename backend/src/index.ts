@@ -13,6 +13,18 @@ const port = process.env.PORT || 4000
 app.use(cors())
 app.use(express.json())
 
+// Корневой маршрут
+app.get('/', (req: Request, res: Response) => {
+  res.json({
+    message: 'API is running',
+    endpoints: {
+      latest: '/api/latest',
+      prices: '/api/prices',
+      collect: '/api/collect'
+    }
+  })
+})
+
 // Получение последней цены
 app.get('/api/latest', (async (_req: Request, res: Response) => {
   try {
