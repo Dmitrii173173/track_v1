@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd backend && npm install && npm run prisma:generate && npm run build"
+
+[deploy]
+startCommand = "cd backend && npm start"
+healthcheckPath = "/api/latest"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3 
