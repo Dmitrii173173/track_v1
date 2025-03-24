@@ -94,6 +94,11 @@ app.post('/api/collect', (async (req: Request, res: Response) => {
   }
 }) as RequestHandler)
 
+// Обработка всех остальных маршрутов для SPA
+app.get('*', (_req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
+})
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 }) 
