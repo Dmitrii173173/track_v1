@@ -8,7 +8,7 @@ COPY backend/package*.json ./
 RUN npm install
 COPY backend ./
 RUN npm run prisma:generate
-RUN npm run build
+RUN npm run build --verbose
 
 # Final image
 FROM base
