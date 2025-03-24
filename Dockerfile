@@ -10,6 +10,7 @@ FROM base AS backend-build
 WORKDIR /app/backend
 COPY backend/package*.json ./
 RUN npm install
+COPY backend/.env ./
 COPY backend ./
 RUN npm run prisma:generate
 RUN npm run build --verbose
