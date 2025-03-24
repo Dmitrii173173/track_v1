@@ -1,11 +1,15 @@
 FROM node:18-alpine AS base
+
+# Установка OpenSSL
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Backend build
 FROM base AS backend-build
 WORKDIR /app/backend
 COPY backend/package*.json ./
-RUN npm install
+RUN npm ci
 COPY backend ./
 RUN npm run prisma:generate
 RUN npm run build --verbose
