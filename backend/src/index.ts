@@ -3,6 +3,7 @@ import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
 import { RequestHandler } from 'express'
+import path from 'path'
 
 dotenv.config()
 
@@ -13,16 +14,12 @@ const port = process.env.PORT || 4000
 app.use(cors())
 app.use(express.json())
 
+// Обслуживание статических файлов фронтенда
+app.use(express.static(path.join(__dirname, '../../frontend/dist')))
+
 // Корневой маршрут
 app.get('/', (_req: Request, res: Response) => {
-  res.json({
-    message: 'API is running',
-    endpoints: {
-      latest: '/api/latest',
-      prices: '/api/prices',
-      collect: '/api/collect'
-    }
-  })
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'))
 })
 
 // Получение последней цены
