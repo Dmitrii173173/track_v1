@@ -1,7 +1,8 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
+import { RequestHandler } from 'express'
 
 dotenv.config()
 
@@ -13,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 // Получение последней цены
-app.get('/api/latest', async (req, res) => {
+app.get('/api/latest', (async (_req: Request, res: Response) => {
   try {
     const latestPrice = await prisma.price.findFirst({
       orderBy: {
@@ -24,10 +25,10 @@ app.get('/api/latest', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch latest price' })
   }
-})
+}) as RequestHandler)
 
 // Получение исторических цен
-app.get('/api/prices', async (req, res) => {
+app.get('/api/prices', (async (req: Request, res: Response) => {
   try {
     const period = req.query.period as string || 'day'
     const now = new Date()
@@ -63,10 +64,10 @@ app.get('/api/prices', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch prices' })
   }
-})
+}) as RequestHandler)
 
 // Эндпоинт для коллектора
-app.post('/api/collect', async (req, res) => {
+app.post('/api/collect', (async (req: Request, res: Response) => {
   try {
     const { price } = req.body
     const newPrice = await prisma.price.create({
@@ -79,7 +80,7 @@ app.post('/api/collect', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to save price' })
   }
-})
+}) as RequestHandler)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
