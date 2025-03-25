@@ -29,13 +29,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'node',
-    serverAssets: [
-      {
-        baseName: 'public',
-        dir: '.output/public'
-      }
-    ]
+    preset: 'node'
   },
 
   vite: {
