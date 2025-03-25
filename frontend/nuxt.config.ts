@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
 
   modules: [
     '@pinia/nuxt',
@@ -26,6 +26,10 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.API_BASE || 'https://trackv1-production.up.railway.app'
     }
+  },
+
+  nitro: {
+    preset: 'node'
   },
 
   vite: {
