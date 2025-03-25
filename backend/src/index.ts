@@ -8,11 +8,26 @@ import { fileURLToPath } from 'url'
 
 dotenv.config()
 
+console.log('Environment variables:', {
+  PORT: process.env.PORT,
+  DATABASE_URL: process.env.DATABASE_URL ? '***' : undefined,
+  NODE_ENV: process.env.NODE_ENV
+})
+
 const app = express()
 const prisma = new PrismaClient()
 const port = process.env.PORT || 8080
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// Проверка подключения к базе данных
+prisma.$connect()
+  .then(() => {
+    console.log('Successfully connected to database')
+  })
+  .catch((error) => {
+    console.error('Failed to connect to database:', error)
+  })
 
 app.use(cors())
 app.use(express.json())
@@ -22,6 +37,7 @@ app.use(express.static(path.join(__dirname, '../../frontend/.output/public')))
 
 // Корневой маршрут
 app.get('/', (_req: Request, res: Response): void => {
+  console.log('Serving index.html')
   res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
 })
 
@@ -129,6 +145,7 @@ app.post('/api/collect', (async (req: Request, res: Response): Promise<void> => 
 
 // Обработка всех остальных маршрутов для SPA
 app.get('*', (_req: Request, res: Response): void => {
+  console.log('Serving index.html for unknown route')
   res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
 })
 
