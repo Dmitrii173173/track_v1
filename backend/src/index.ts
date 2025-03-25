@@ -3,8 +3,6 @@ import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
 import { RequestHandler } from 'express'
-import path from 'path'
-import { fileURLToPath } from 'url'
 
 dotenv.config()
 
@@ -17,8 +15,6 @@ console.log('Environment variables:', {
 const app = express()
 const prisma = new PrismaClient()
 const port = process.env.PORT || 8080
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 // Проверка подключения к базе данных
 prisma.$connect()
@@ -31,15 +27,6 @@ prisma.$connect()
 
 app.use(cors())
 app.use(express.json())
-
-// Обслуживание статических файлов фронтенда
-app.use(express.static(path.join(__dirname, '../../frontend/.output/public')))
-
-// Корневой маршрут
-app.get('/', (_req: Request, res: Response): void => {
-  console.log('Serving index.html')
-  res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
-})
 
 // Получение последней цены
 app.get('/api/latest', (async (_req: Request, res: Response): Promise<void> => {
@@ -142,12 +129,6 @@ app.post('/api/collect', (async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ error: 'Failed to save price' })
   }
 }) as RequestHandler)
-
-// Обработка всех остальных маршрутов для SPA
-app.get('*', (_req: Request, res: Response): void => {
-  console.log('Serving index.html for unknown route')
-  res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
-})
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

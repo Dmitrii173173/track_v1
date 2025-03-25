@@ -24,7 +24,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'http://localhost:4000'
+      apiBase: process.env.API_BASE || 'https://trackv1-production.up.railway.app'
     }
   },
 
@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:4000',
+          target: process.env.API_BASE || 'https://trackv1-production.up.railway.app',
           changeOrigin: true
         }
       }
