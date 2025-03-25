@@ -21,12 +21,12 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, '../../frontend/.output/public')))
 
 // Корневой маршрут
-app.get('/', (_req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response): void => {
   res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
 })
 
 // Получение последней цены
-app.get('/api/latest', (async (_req: Request, res: Response) => {
+app.get('/api/latest', (async (_req: Request, res: Response): Promise<void> => {
   try {
     console.log('Fetching latest price...')
     const latestPrice = await prisma.price.findFirst({
@@ -37,7 +37,8 @@ app.get('/api/latest', (async (_req: Request, res: Response) => {
     
     if (!latestPrice) {
       console.log('No prices found in database')
-      return res.status(404).json({ error: 'No prices found' })
+      res.status(404).json({ error: 'No prices found' })
+      return
     }
     
     console.log('Latest price:', latestPrice)
@@ -49,7 +50,7 @@ app.get('/api/latest', (async (_req: Request, res: Response) => {
 }) as RequestHandler)
 
 // Получение исторических цен
-app.get('/api/prices', (async (req: Request, res: Response) => {
+app.get('/api/prices', (async (req: Request, res: Response): Promise<void> => {
   try {
     const period = req.query.period as string || 'day'
     const now = new Date()
@@ -69,7 +70,8 @@ app.get('/api/prices', (async (req: Request, res: Response) => {
         startDate.setFullYear(now.getFullYear() - 1)
         break
       default:
-        return res.status(400).json({ error: 'Invalid period' })
+        res.status(400).json({ error: 'Invalid period' })
+        return
     }
 
     console.log(`Fetching prices from ${startDate.toISOString()} to ${now.toISOString()}`)
@@ -86,7 +88,8 @@ app.get('/api/prices', (async (req: Request, res: Response) => {
 
     if (!prices.length) {
       console.log('No prices found for the specified period')
-      return res.status(404).json({ error: 'No prices found for the specified period' })
+      res.status(404).json({ error: 'No prices found for the specified period' })
+      return
     }
 
     console.log(`Found ${prices.length} prices`)
@@ -98,13 +101,14 @@ app.get('/api/prices', (async (req: Request, res: Response) => {
 }) as RequestHandler)
 
 // Эндпоинт для коллектора
-app.post('/api/collect', (async (req: Request, res: Response) => {
+app.post('/api/collect', (async (req: Request, res: Response): Promise<void> => {
   try {
     const { price } = req.body
 
     if (!price || isNaN(parseFloat(price))) {
       console.error('Invalid price received:', price)
-      return res.status(400).json({ error: 'Invalid price' })
+      res.status(400).json({ error: 'Invalid price' })
+      return
     }
 
     console.log('Saving new price:', price)
@@ -124,7 +128,7 @@ app.post('/api/collect', (async (req: Request, res: Response) => {
 }) as RequestHandler)
 
 // Обработка всех остальных маршрутов для SPA
-app.get('*', (_req: Request, res: Response) => {
+app.get('*', (_req: Request, res: Response): void => {
   res.sendFile(path.join(__dirname, '../../frontend/.output/public/index.html'))
 })
 
