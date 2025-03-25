@@ -1,9 +1,11 @@
 export default defineNuxtConfig({
   ssr: false,
+
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss'
   ],
+
   app: {
     head: {
       title: 'BTC Price Tracker',
@@ -14,15 +16,18 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   typescript: {
     strict: true,
     typeCheck: false
   },
+
   runtimeConfig: {
     public: {
       apiBase: process.env.API_BASE || 'http://localhost:4000'
     }
   },
+
   vite: {
     server: {
       proxy: {
@@ -32,5 +37,7 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
-}) 
+  },
+
+  compatibilityDate: '2025-03-25'
+})

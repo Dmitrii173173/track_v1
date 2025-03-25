@@ -1,19 +1,18 @@
 {
   "name": "track-collector",
   "version": "1.0.0",
-  "private": true,
+  "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "start": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "load": "ts-node-dev --transpile-only src/loadData.ts"
   },
   "dependencies": {
-    "axios": "^1.6.2",
-    "dotenv": "^16.3.1"
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
+    "@types/node": "^20.11.19",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.3"
   }
 } 

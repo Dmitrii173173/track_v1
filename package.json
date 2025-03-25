@@ -12,7 +12,7 @@
     "install:frontend": "cd frontend && npm install",
     "install:collector": "cd collector && npm install",
     "install:all": "npm run install:backend && npm run install:frontend && npm run install:collector",
-    "start:backend": "cd backend && npm start",
+    "start:backend": "cd backend && npm run dev",
     "start:frontend": "cd frontend && npm run dev",
     "start:collector": "cd collector && npm start",
     "build:backend": "cd backend && npm run build",
