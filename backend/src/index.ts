@@ -29,7 +29,7 @@ app.use(cors())
 app.use(express.json())
 
 // Middleware для логирования запросов
-app.use((req, res, next) => {
+app.use((req: Request, _res: Response, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.url}`)
   next()
 })
