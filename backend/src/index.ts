@@ -14,7 +14,7 @@ console.log('Environment variables:', {
 
 const app = express()
 const prisma = new PrismaClient()
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 4000
 
 // Проверка подключения к базе данных
 prisma.$connect()
@@ -28,11 +28,19 @@ prisma.$connect()
 app.use(cors())
 app.use(express.json())
 
+// Middleware для логирования запросов
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`)
+  next()
+})
+
 // Эндпоинт для проверки работоспособности
 app.get('/health', (async (_req: Request, res: Response): Promise<void> => {
   try {
+    console.log('Health check requested')
     // Проверяем подключение к базе данных
     await prisma.$queryRaw`SELECT 1`
+    console.log('Database connection check passed')
     res.status(200).json({ status: 'ok', database: 'connected' })
   } catch (error) {
     console.error('Health check failed:', error)
