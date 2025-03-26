@@ -43,14 +43,15 @@ const fetchLatestPrice = async () => {
     error.value = null;
     const response = await fetch(`${config.public.apiBase}/api/latest`);
     if (!response.ok) {
-      throw new Error("Failed to fetch latest price");
+      throw new Error(`Failed to fetch latest price: ${response.statusText}`);
     }
     latestPrice.value = await response.json();
-  } catch (error) {
-    console.error("Failed to fetch latest price:", error);
+  } catch (err) {
+    console.error("Failed to fetch latest price:", err);
     error.value = "Failed to fetch latest price";
   }
 };
+
 
 const fetchPrices = async () => {
   try {
