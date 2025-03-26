@@ -40,6 +40,14 @@ COPY --from=frontend-build /app/frontend/.output ./frontend/.output
 # Copy supervisord config
 COPY supervisord.conf /etc/supervisord.conf
 
+# Create startup script
+RUN echo '#!/bin/sh\n\
+cd /app/backend && npx prisma migrate deploy\n\
+/usr/bin/supervisord -c /etc/supervisord.conf\n\
+sleep 5\n\
+supervisorctl start frontend\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=4000
@@ -52,4 +60,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
 
 # Start the application
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["/app/start.sh"]
