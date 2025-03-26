@@ -28,6 +28,18 @@ prisma.$connect()
 app.use(cors())
 app.use(express.json())
 
+// Эндпоинт для проверки работоспособности
+app.get('/health', (async (_req: Request, res: Response): Promise<void> => {
+  try {
+    // Проверяем подключение к базе данных
+    await prisma.$queryRaw`SELECT 1`
+    res.status(200).json({ status: 'ok', database: 'connected' })
+  } catch (error) {
+    console.error('Health check failed:', error)
+    res.status(500).json({ status: 'error', database: 'disconnected' })
+  }
+}) as RequestHandler)
+
 // Получение последней цены
 app.get('/api/latest', (async (_req: Request, res: Response): Promise<void> => {
   try {
