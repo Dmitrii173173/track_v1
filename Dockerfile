@@ -19,6 +19,7 @@ FROM base AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
+RUN npm install vue-chartjs chart.js
 COPY frontend ./
 RUN npm run postinstall
 RUN npm run build
@@ -43,5 +44,9 @@ ENV PORT=4000
 # Expose port
 EXPOSE 4000
 
+# Healthcheck для Railway
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health || exit 1
+
 # Start the application
-CMD ["node", "backend/dist/index.js"] 
+CMD ["sh", "-c", "cd backend && npx prisma migrate deploy && node dist/index.js & cd ../frontend && node .output/server/index.mjs"]
