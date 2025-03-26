@@ -19,7 +19,7 @@ FROM base AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
-RUN npm install vue-chartjs chart.js
+RUN npm install vue-chartjs chart.js date-fns
 COPY frontend ./
 RUN npm run postinstall
 RUN npm run build
