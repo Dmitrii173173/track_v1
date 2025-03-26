@@ -1,7 +1,7 @@
 FROM node:18-alpine AS base
 
 # Установка OpenSSL и supervisord
-RUN apk add --no-cache openssl supervisor
+RUN apk add --no-cache openssl supervisor wget
 
 WORKDIR /app
 
